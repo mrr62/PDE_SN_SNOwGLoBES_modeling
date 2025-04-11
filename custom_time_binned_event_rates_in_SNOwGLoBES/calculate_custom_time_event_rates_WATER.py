@@ -41,13 +41,38 @@ for fname in sorted(os.listdir(cross_section_dir)):
     if len(parts) < 2:
         continue
 
-    flavor = parts[1]  # nue, numu, etc.
-    interaction = "_".join(parts[2:])
-    fluence_col = fluence_map.get(flavor)
+    # Special case: IBD
+    if parts[1] == "ibd":
+        flavor = "nuebar"         # IBD is always nuebar
+        interaction = "ibd"
+        target = "ibd"
+        fluence_col = fluence_map.get(flavor)
+        if "ibd2" in fname or "ibd_he" in fname:
+            continue  # Skip these
 
+    # Special case: Neutral Current (NC)
+    elif parts[1] == "nc" and len(parts) >= 4:
+        flavor = parts[2]         # xs_nc_nutau_O16 → nutau
+        target = parts[3]         # O16
+        interaction = "_".join(parts[1:])  # nc_nutau_O16
+        fluence_col = fluence_map.get(flavor)
+
+    # Regular case
+    else:
+        flavor = parts[1]
+        target = parts[-1]
+        interaction = "_".join(parts[2:])
+        fluence_col = fluence_map.get(flavor)
+
+    # Skip if fluence not available (e.g., sterile flavors)
     if fluence_col is None:
         continue
 
+    # Filter by allowed targets for your detector
+    allowed_targets = ["e", "O16", "ibd"]
+    if target not in allowed_targets:
+        continue
+        
     # Modify for what detecotr material is your target
     allowed_targets = ["e", "O16", "ibd"]
     target = parts[-1]

@@ -7,11 +7,11 @@ import numpy as np
 import os
 
 # Paths
-fluence_file = "/home/mrr62/SN_stuff/globes-3.2.18/snowglobes/fluxes/ts_combined_PDE_fluence.dat"
-cross_section_dir = "/home/mrr62/SN_stuff/globes-3.2.18/snowglobes/xscns"
-output_dir = "/home/mrr62/SN_stuff/globes-3.2.18/snowglobes/out"
+fluence_file = "/home/mrr62/SN_stuff/globes-3.2.18/snowglobes/fluxes/ts_combined_PDE_fluence.dat" #path to fluence file
+cross_section_dir = "/home/mrr62/SN_stuff/globes-3.2.18/snowglobes/xscns" #path to SNOwGLoBES cross-section directory
+output_dir = "/home/mrr62/SN_stuff/globes-3.2.18/snowglobes/out/ts_water"
 
-# Detector config for wc100kt30prct
+# Detector config for wc100kt30prct - can be edited for any supported detector config, but must also edit allowed interaction channels and cross-sections, as well as the calculation for target count 
 detector_name = "wc100kt30prct"
 detector_mass_kg = 100_000 * 1e3  # 100 kton to kg
 normalization = 0.1111  # from detector_configurations.dat
@@ -72,12 +72,7 @@ for fname in sorted(os.listdir(cross_section_dir)):
     allowed_targets = ["e", "O16", "ibd"]
     if target not in allowed_targets:
         continue
-        
-    # Modify for what detecotr material is your target
-    allowed_targets = ["e", "O16", "ibd"]
-    target = parts[-1]
-    if target not in allowed_targets:
-        continue
+
 
     # Read cross section file — for multi-column files
     xs_file = os.path.join(cross_section_dir, fname)
